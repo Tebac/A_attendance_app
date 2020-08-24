@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'admin_static_pages/index'
-
   root 'static_pages#top'
   get '/signup', to: 'users#new'
 
@@ -11,6 +9,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
 
   resources :users do
+    get 'admin_static_pages/index'
       
     member do
       get 'edit_basic_info'

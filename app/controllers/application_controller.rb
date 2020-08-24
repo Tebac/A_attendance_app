@@ -25,19 +25,29 @@ class ApplicationController < ActionController::Base
     redirect_to(root_url) unless current_user?(@user)
   end
 
-  # システム管理権限所有かどうか判定します。
-  def admin_user
-    redirect_to root_url unless current_user.admin?
+  # 上長管理権限所有かどうか判定します。
+  def superior_user
+    redirect_to root_url unless current_user.superior?
   end
   
-  # 管理権限者、または現在ログインしているユーザーを許可します。
-    def admin_or_correct_user
+   # 上長管理権限者、または現在ログインしているユーザーを許可します。
+    def superior_or_correct_user
       @user = User.find(params[:user_id]) if @user.blank?
-      unless current_user?(@user) || current_user.admin?
+      unless current_user?(@user) || current_user.superior?
         flash[:danger] = "アクセス権限がありません。"
         redirect_to(root_url)
       end  
     end
+    
+     # システム管理権限所有かどうか判定します。
+  def admin_user
+    if current_user.admin?
+      redirect_to user_admin_static_pages_index_url(@user)
+    else
+      user_url
+    end
+  end
+  
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month 
