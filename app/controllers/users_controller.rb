@@ -70,7 +70,8 @@ end
 private
 
 def user_params
-params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :password, :password_confirmation,
+    :basic_time, :designated_work_srart_time, :designated_work_end_time)
 end
 
 def basic_info_params
