@@ -5,7 +5,7 @@ class AdminStaticPagesController < ApplicationController
   before_action :superior_user, only: [:destroy, :edit_basic_info, :update_basic_info]
   before_action :superior_or_correct_user, only: :show
   before_action :set_one_month, only: :show
-  before_action :admin_user, only: :show
+  before_action :admin_user, only: [:show, :destroy, :edit_basic_info, :update_basic_info]
 
   def index
     @user = User.find(params[:user_id])

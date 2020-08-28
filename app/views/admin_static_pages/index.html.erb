@@ -10,7 +10,7 @@
   
   <div class="col-md-3 col-md-offset-9">
   <p>ユーザー名検索</p>
-  <%= form_with url: user_admin_static_pages_index_path(), method: :get, local: true do |f| %>
+  <%= form_with url: user_admin_static_pages_index_path, method: :get, local: true do |f| %>
     <%= f.text_field :name %>
    <button class="btn btn-primary btn-sm"><% f.submit :Search %>検索</button>
    <% end %>
@@ -24,8 +24,7 @@
       </div>
     
       <table class="table table-condensed table-hover" id="table-users">
-        <% User.where.not(id: "1").each do |user| %>
-        
+        <% @users.where.not(id: "1").each do |user| %>
         <thead>
           <tr>
             <th><%= user.name %></th>
@@ -39,7 +38,7 @@
               </div>
             </td>
             <td>
-              <% if current_user.admin?  && !current_user?(user) %>
+              <% if current_user.admin? %>
                 <%= link_to "削除", user, method: :delete,
                   data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
               <% end %>
@@ -47,7 +46,7 @@
           </tr>
           <tr>
             <td>
-              <% if current_user.admin? && !current_user?(user) %>
+              <% if current_user.admin? %>
               <div id="link-<%= user.id %>" class="collapse" >
                 <div class="card card-body">
                     <div class="row">
@@ -59,7 +58,6 @@
               <% end %>
             </td>
           </tr>
-
         <% end %>
   </table>
       <div class="col-md-11">
