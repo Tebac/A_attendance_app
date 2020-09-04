@@ -7,11 +7,14 @@ Rails.application.routes.draw do
   get    '/login', to: 'sessions#new'
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  
+  
 
   resources :users do
-    get 'admin_static_pages/index'
-      
+    collection { post :import }
+    
     member do
+      get 'employees_working'
       get 'edit_basic_info'
       get 'edit_all_basic_info'
       patch 'update_basic_info'

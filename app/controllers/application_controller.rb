@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   def set_user
     @user = User.find(params[:id])
   end
+   
 
   # ログイン済みのユーザーか確認します。
   def logged_in_user
@@ -24,13 +25,20 @@ class ApplicationController < ActionController::Base
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
   end
+  
+   # システム管理権限所有かどうか判定します。
+  def admin_user
+    if current_user.admin?
+      redirect_to users_url
+    end
+  end
 
   # 上長管理権限所有かどうか判定します。
   def superior_user
     redirect_to root_url unless current_user.superior?
   end
   
-   # 上長管理権限者、または現在ログインしているユーザーを許可します。
+  # 上長管理権限者、または現在ログインしているユーザーを許可します。
     def superior_or_correct_user
       @user = User.find(params[:user_id]) if @user.blank?
       unless current_user?(@user) || current_user.superior?
@@ -39,14 +47,7 @@ class ApplicationController < ActionController::Base
       end  
     end
     
-     # システム管理権限所有かどうか判定します。
-  def admin_user
-    if current_user.admin?
-      redirect_to user_admin_static_pages_index_url(@user)
-    else
-      user_url
-    end
-  end
+    
   
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。

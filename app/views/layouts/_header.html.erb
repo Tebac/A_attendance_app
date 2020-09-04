@@ -6,10 +6,11 @@
         <li><%= link_to "トップへ", root_path %></li>
           <% if logged_in? %>
             <% if current_user.admin? %>
-              <li><%= link_to "全従業員一覧", user_admin_static_pages_index_path(current_user) %></li>
-              <li><%= link_to "基本情報の修正", edit_all_basic_info_user_path(current_user)%></li>
-              <% else %>
-              <li><%= link_to "ユーザー一覧", users_path %></li>
+              <li><%= link_to "全従業員一覧", users_path %></li>
+              <li><%= link_to "出勤中の社員一覧",employees_working_user_path(current_user) %></li>
+              <li><%= link_to "基本情報の修正", edit_all_basic_info_user_path(current_user) %></li>
+              <!--<!% else %>-->
+              <!--<li><!%= link_to "ユーザー一覧", users_path %></li>-->
             <% end %>
             
             <li class="dropdown">

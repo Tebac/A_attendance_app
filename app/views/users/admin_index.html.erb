@@ -10,7 +10,7 @@
   
   <div class="col-md-3 col-md-offset-9">
   <p>ユーザー名検索</p>
-  <%= form_with url: user_admin_static_pages_index_path, method: :get, local: true do |f| %>
+  <%= form_with url: users_path, method: :get, local: true do |f| %>
     <%= f.text_field :name %>
    <button class="btn btn-primary btn-sm"><% f.submit :Search %>検索</button>
    <% end %>
@@ -33,12 +33,12 @@
           <tr>
             <td>
               <div class="collaps">
-                  <a href = "#link-<%= user.id %> " data-toggle="collapse" class="btn btn-primary"
+                  <a href = "#<%= user.id %> " data-toggle="collapse" class="btn btn-primary"
                   aria-expanded="false" aria-controls="collapse>">編集</a>
               </div>
             </td>
             <td>
-              <% if current_user.admin? %>
+              <% if current_user.admin? && !current_user?(user) %>
                 <%= link_to "削除", user, method: :delete,
                   data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
               <% end %>
@@ -47,11 +47,11 @@
           <tr>
             <td>
               <% if current_user.admin? %>
-              <div id="link-<%= user.id %>" class="collapse" >
+              <div id="<%= user.id %>" class="collapse" >
                 <div class="card card-body">
                     <div class="row">
                       <% @user = user %>
-                        <%= render 'users/form' %>
+                        <%= render 'form' %>
                     </div>
                   </div>
               </div>

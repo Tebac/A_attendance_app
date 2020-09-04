@@ -1,55 +1,74 @@
 <% provide(:title, 'Users') %>
-<h1>ユーザー一覧</h1>
+<% provide(:class_text, 'user--edit') %>
+<% provide(:button_text, '更新') %>
 
-<div class="col-md-3 col-md-offset-9">
-  <p>ユーザー名検索</p>
-  <%= form_with url: users_path, method: :get, local: true do |f| %>
-    <%= f.text_field :name %>
-   <button class="btn btn-primary btn-sm"><% f.submit :Search %>検索</button>
-   <% end %>
-</div>
 
-<div class="col-md-10 col-md-offset-1">
-  <%= will_paginate(@users) %>
-  <table class="table table-condensed table-hover" id="table-users">
-    <thead>
-      <tr>
-        <th><%= User.human_attribute_name :name %></th>
-        <th class="center"><%= User.human_attribute_name :department %></th>
-        <% if current_user.superior? %>
-          <th class="center"><%= User.human_attribute_name :basic_time %></th>
-          <th class="center"><%= User.human_attribute_name :work_time %></th>
+<div class="content">
+  <div class="header">
+    <h1 class="title">全従業員一覧</h1>
+  </div>
+  
+  <div class="col-md-3 col-md-offset-9">
+    <p>ユーザー名検索</p>
+      <%= form_with url: users_path, method: :get, local: true do |f| %>
+      <%= f.text_field :name %>
+      <button class="btn btn-primary btn-sm"><% f.submit :Search %>検索</button>
+      <% end %>
+  </div>
+  
+  <div class="col-md-10 col-md-offset-1">
+    <div class="row">
+      <div class="col-md-11">
+        <%= will_paginate(@users) %>
+      </div>
+      
+      <div class="col-md-11" "btn btn-primary">
+        <%= form_tag import_users_path, multipart: true do %>
+          <%= file_field_tag :file %>
+          <%= submit_tag "従業員を追加します", class: "btn btn-primary" %>
         <% end %>
-        <th></th>
-      </tr>
-    </thead>
-
-    <% @users.each do |user| %>
-      <tr>
-        <td>
-          <% if current_user.superior? %>
-            <%= link_to user.name, user %>
-          <% else %>
-            <%= user.name %>
-          <% end %>
-        </td>
-        <td class="center"><%= user.department.present? ? user.department : "未所属" %></td>
-        <% if current_user.superior? %>
-          <td class="center"><%= format_basic_info(user.basic_time) %></td>
-          <td class="center"><%= format_basic_info(user.work_time) %></td>
+      </div>
+    
+      <table class="table table-condensed table-hover" id="table-users">
+        <% @users.where.not(id: "1").each do |user| %>
+        <thead>
+          <tr>
+            <th><%= user.name %></th>
+          </tr>
+        </thead>
+          <tr>
+            <td>
+              <div class="collaps">
+                  <a href = "#<%= user.id %> " data-toggle="collapse" class="btn btn-primary"
+                  aria-expanded="false" aria-controls="collapse>">編集</a>
+              </div>
+            </td>
+            <td>
+            
+                <%= link_to "削除", user, method: :delete,
+                  data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
+            
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="<%= user.id %>" class="collapse" >
+                <div class="card card-body">
+                    <div class="row">
+                      <% @user = user %>
+                        <%= render 'users/form', method: :patch %>
+                    </div>
+                  </div>
+              </div>
+            
+            </td>
+          </tr>
         <% end %>
-        <td class="center">
-          <% if current_user.superior? && !current_user?(user) %>
-            <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
-            <%= link_to "削除", user, method: :delete,
-                data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
   </table>
-  <%= will_paginate(@users) %>
+      <div class="col-md-11">
+        <%= will_paginate(@users) %>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!--モーダルウインドウ表示-->
-<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
