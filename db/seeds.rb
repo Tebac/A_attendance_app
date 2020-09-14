@@ -32,3 +32,5 @@ User.create!(name: "Superior-2 User",
               password: password,
               password_confirmation: password)
 end
+
+Location.create!(location_name: "本社",location_type: "出勤",user_id:1)

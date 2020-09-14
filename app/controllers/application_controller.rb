@@ -5,13 +5,7 @@ class ApplicationController < ActionController::Base
   $days_of_the_week = %w{日 月 火 水 木 金 土}
 
   # beforフィルター
-
-  # paramsハッシュからユーザーを取得します。
-  def set_user
-    @user = User.find(params[:id])
-  end
-   
-
+ 
   # ログイン済みのユーザーか確認します。
   def logged_in_user
     unless logged_in?
@@ -22,33 +16,23 @@ class ApplicationController < ActionController::Base
   end
 
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
-  def correct_user
-    redirect_to(root_url) unless current_user?(@user)
-  end
+  # def correct_user
+  #   redirect_to root_url unless current_user?(@user)
+  # end
   
    # システム管理権限所有かどうか判定します。
   def admin_user
-    if current_user.admin?
-      redirect_to users_url
-    end
+    redirect_to root_url unless current_user.admin?
+  end
+  
+   # @userが定義されている上で使用する
+  def admin_or_correct
+    unless current_user?(@user) || current_user.admin?
+      flash[:danger] = "権限がありません。"
+      redirect_to root_url
+    end  
   end
 
-  # 上長管理権限所有かどうか判定します。
-  def superior_user
-    redirect_to root_url unless current_user.superior?
-  end
-  
-  # 上長管理権限者、または現在ログインしているユーザーを許可します。
-    def superior_or_correct_user
-      @user = User.find(params[:user_id]) if @user.blank?
-      unless current_user?(@user) || current_user.superior?
-        flash[:danger] = "アクセス権限がありません。"
-        redirect_to(root_url)
-      end  
-    end
-    
-    
-  
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month 

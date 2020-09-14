@@ -25,7 +25,7 @@
       <div class="col-md-11" "btn btn-primary">
         <%= form_tag import_users_path, multipart: true do %>
           <%= file_field_tag :file %>
-          <%= submit_tag "従業員を追加します", class: "btn btn-primary" %>
+          <%= submit_tag "従業員情報を追加します", class: "btn btn-primary" %>
         <% end %>
       </div>
     
@@ -39,15 +39,13 @@
           <tr>
             <td>
               <div class="collaps">
-                  <a href = "#<%= user.id %> " data-toggle="collapse" class="btn btn-primary"
+                  <a href = "#<%= user.id %> " data-toggle="collapse" class="btn btn-success"
                   aria-expanded="false" aria-controls="collapse>">編集</a>
               </div>
             </td>
             <td>
-            
-                <%= link_to "削除", user, method: :delete,
-                  data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
-            
+              <%= link_to "削除", user_path(user), method: :delete,
+              data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
             </td>
           </tr>
           <tr>
@@ -56,7 +54,7 @@
                 <div class="card card-body">
                     <div class="row">
                       <% @user = user %>
-                        <%= render 'users/form', method: :patch %>
+                        <%= render 'form_f', method: :patch %>
                     </div>
                   </div>
               </div>

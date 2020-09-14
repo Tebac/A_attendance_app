@@ -1,0 +1,32 @@
+<% provide(:title, 'Location') %>
+<% provide(:class_text, 'location--show') %>
+
+  <div class="content">
+    <div class="header">
+      <h1 class="title">拠点情報ページ</h1>
+    </div>
+    
+      <!--<!% @location.each do |l| %>-->
+        <table class="table table-condensed table-hover" id="table-users">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>拠点番号</th>
+          <th>拠点名</th>
+          <th>勤怠種類</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td><%= @location.id %></td>
+          <td><%= @location.location_name %></td>
+          <td><%= @location.location_type %></td>
+        </tr>
+      </tbody>
+    </table>
+    <%= link_to "拠点一覧へ戻る", user_locations_path, class: "btn btn-primary" %>
+      
+  </div>
