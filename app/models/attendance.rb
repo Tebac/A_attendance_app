@@ -21,6 +21,24 @@ class Attendance < ApplicationRecord
     end
   end
   
+  #変更時間のバリデーション
+  # 出勤時間が存在しない場合、退勤時間は無効
+  validate :changed_finished_at_is_invalid_without_a_changed_started_at
+  # 出勤・退勤時間どちらも存在する時、出勤時間より早い退勤時間は無効
+  validate :changed_started_at_than_changed_finished_at_fast_if_invalid
+  #当日以前の退勤時間更新前のバリデーション
+  # validate :before_changed_finished_at_update
+  
+  def changed_finished_at_is_invalid_without_a_changed_started_at
+    errors.add(:changed_started_at, "が必要です") if changed_started_at.blank? && changed_finished_at.present?
+  end
+
+  def changed_started_at_than_changed_finished_at_fast_if_invalid
+    if changed_started_at.present? && changed_finished_at.present?
+      errors.add(:changed_started_at, "より早い退勤時間は無効です") if changed_started_at > changed_finished_at
+    end
+  end
+  
   def self.search(search)
     return Attendance.all unless search
     # 開発環境

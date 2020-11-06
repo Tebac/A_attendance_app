@@ -23,13 +23,13 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     # 出勤時間が未登録であることを判定します。
-    if @attendance.started_at.nil?
+    if @attendance.started_at.nil? && @attendance.changed_started_at.nil?
       if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0))
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
-    elsif @attendance.finished_at.nil?
+    elsif @attendance.finished_at.nil? && @attendance.changed_finished_at.nil?
       if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0))
         flash[:info] = "お疲れ様でした。"
       else
@@ -48,15 +48,17 @@ class AttendancesController < ApplicationController
       attendances_params.each do |id, item|
         # attendances_paramsから1日分取り出す。idはAttendanceのid、itemはストロングパラメーターの項目（:started_at, :finished_at, :note）
         attendance = Attendance.find(id)
-        # if item[:started_at].present? && item[:finished_at].blank?
-        # flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-        # redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+        if item[:started_at].present? && item[:finished_at].blank? ||
+           item[:changed_started_at].present? && item[:changed_finished_at].blank?
+          flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+          redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+        end
         
         if item[:change_superior_id].present?
             attendance.update_attributes!(item)
             attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
         end
-      end
+        end
     end
         flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
         redirect_to user_url(date: params[:date])
