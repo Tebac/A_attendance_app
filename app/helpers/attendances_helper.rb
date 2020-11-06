@@ -34,7 +34,7 @@ module AttendancesHelper
   # end
   
   def working_times_ed(start, finish)
-   format("%.2f", (finish - start) / 60 / 60.0)
+    format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
   end
   
   def round_s(start)
