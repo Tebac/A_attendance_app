@@ -19,20 +19,7 @@ module AttendancesHelper
     end
   end
   
-   # def working_times(start, finish, next_day)
-  #   if next_day == "1"
-  #     format("%.2f", (24 - ((start - finish) / 60) / 60.0))
-  #     hour = (24 - start.hour) + finish.hour
-  #     min = finish.min - start.min
-  #     @total_time = hour + min / 60.00
-  #   elsif
-  #     format("%.2f", (((finish - start) / 60) / 60.0))
-  #     hour = finish.hour - start.hour
-  #     min = finish.min - start.min
-  #     @total_time = hour + min / 60.00
-  #   end
-  # end
-  
+#当日内勤務
   def working_times_ed(start, finish)
     format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
   end
@@ -45,9 +32,6 @@ module AttendancesHelper
     finish.floor_to(15.minutes)
   end
   
-  # def total_working_times
-  #   @total_working_times = total_working_times.to_f
-  # end
   
   # 1ヶ月勤怠申請が自分にきているか
   def one_month_request
@@ -158,7 +142,6 @@ module AttendancesHelper
   def overtime_request_employee
     User.joins(:attendances).where.not(attendances: {overtime_superior_id: nil}).where(attendances: {overtime_approval: 2}).distinct
   end
-  
  
   
   # 残業申請時間外時間の計算
