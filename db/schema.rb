@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200905002053) do
+ActiveRecord::Schema.define(version: 20201102001755) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -21,6 +21,38 @@ ActiveRecord::Schema.define(version: 20200905002053) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.time "working_time"
+    t.datetime "schedule_started_at", default: "2020-11-05 01:00:00"
+    t.datetime "schedule_finished_at", default: "2020-11-05 10:00:00"
+    t.datetime "overtime"
+    t.datetime "end_instruction_time"
+    t.string "instructor_confirmation"
+    t.text "overtime_instructions"
+    t.string "instructor"
+    t.string "approval"
+    t.string "next_day", default: "0"
+    t.integer "overtime_superior_id"
+    t.string "overtime_status"
+    t.integer "overtime_approval", default: 1
+    t.string "overtime_hours"
+    t.string "overtime_check", default: "0"
+    t.datetime "month_request"
+    t.string "month_check", default: "0"
+    t.integer "month_approval", default: 1
+    t.datetime "changed_started_at"
+    t.datetime "changed_finished_at"
+    t.string "change_check", default: "0"
+    t.string "change_next_day", default: "0"
+    t.string "change_status"
+    t.integer "change_superior_id"
+    t.integer "change_approval", default: 1
+    t.integer "superior_id"
+    t.string "status"
+    t.string "change_superior_name"
+    t.string "overtime_superior_name"
+    t.string "superior_name"
+    t.date "calendar_day"
+    t.datetime "approval_date"
+    t.string "reason_change"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -30,7 +62,16 @@ ActiveRecord::Schema.define(version: 20200905002053) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "location_number"
     t.index ["user_id"], name: "index_locations_on_user_id"
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.datetime "schedule_finished_at", default: "2020-11-05 10:00:00"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_schedules_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -42,11 +83,11 @@ ActiveRecord::Schema.define(version: 20200905002053) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2020-09-12 23:00:00"
-    t.datetime "work_time", default: "2020-09-12 22:30:00"
-    t.datetime "basic_work_time", default: "2020-09-12 23:00:00"
-    t.datetime "designated_work_srart_time", default: "2020-09-13 01:00:00"
-    t.datetime "designated_work_end_time", default: "2020-09-13 10:00:00"
+    t.datetime "basic_time", default: "2020-11-04 23:00:00"
+    t.datetime "work_time", default: "2020-11-04 22:30:00"
+    t.datetime "basic_work_time", default: "2020-11-04 23:00:00"
+    t.datetime "designated_work_start_time", default: "2020-11-05 01:00:00"
+    t.datetime "designated_work_end_time", default: "2020-11-05 10:00:00"
     t.boolean "superior", default: false
     t.string "affiliation", default: "未所属"
     t.integer "employee_number"

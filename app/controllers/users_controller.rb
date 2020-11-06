@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
   
   before_action :set_user, only: %i(show edit update destroy)
-  before_action :logged_in_user, only: %i(index show edit update)
+  before_action :logged_in_user, only: %i(index show edit update edit_basic_info import)
   before_action :admin_user, only: %i(index edit update destroy)
   # before_action :correct_user, only: %i(edit update)
-  before_action :admin_or_correct, only: %i(show)
+  # before_action :admin_or_correct, only: %i(show)
   # before_action :superior_user
-  # before_action :superior_or_correct
+  before_action :admin_exclusion, only: %i(show)
+  before_action :superior_or_correct, only: %i(show)
   before_action :set_one_month, only: :show
     
 
@@ -34,6 +35,17 @@ class UsersController < ApplicationController
     
     def show
       @worked_sum = @attendances.where.not(started_at: nil).count
+      @superiors = superior_without_me
+      @superiors_all = superior_add_me
+      @month = set_one_month_request
+    
+    respond_to do |format|
+      format.html
+      format.csv do
+          send_data render_to_string.encode(Encoding::Windows_31J, undef: :replace, row_sep: "\r\n", force_quotes: true),
+          filename: "#{@user.name}(#{l(@first_day, format: :middle)})勤怠情報.csv", type: :csv
+      end
+    end
     end
     
     def new
@@ -58,7 +70,6 @@ class UsersController < ApplicationController
       @user.update_attributes(user_params)
       flash[:success] = "#{@user.name}のデータを更新しました。"
       redirect_to users_url
-      
     end
     
     def destroy
@@ -73,18 +84,12 @@ class UsersController < ApplicationController
     
   private
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :superior, :admin, :password, :password_confirmation)
     end
   
-   
-    
-    # paramsハッシュからユーザーを取得します。
-    def set_user
-      @user = User.find(params[:id])
-    end
     
      def user_info_params
-      params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_time, :designated_work_srart_time, :designated_work_end_time)
+      params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_time, :designated_work_start_time, :designated_work_end_time)
      end
      
       # システム管理権限所有かどうか判定します。
@@ -92,11 +97,11 @@ class UsersController < ApplicationController
     #   redirect_to root_url unless current_user.superior?
     # end
      
-    # def superior_or_correct
-    #   unless current_user?(@user) || current_user.superior?
-    #   flash[:danger] = "権限がありません。"
-    #   redirect_to root_url
-    #   end
-    # end
+    def superior_or_correct
+      unless current_user?(@user) || current_user.superior?
+      flash[:danger] = "権限がありません。"
+      redirect_to root_url
+      end
+    end
  
 end

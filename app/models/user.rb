@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :locations, dependent: :destroy
+  has_many :schedules, dependent: :destroy
   # 「remember_token」という仮想の属性を作成します。
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
@@ -17,7 +18,7 @@ class User < ApplicationRecord
   validates :department, length: { in: 2..50 }, allow_blank: true
   validates :basic_time, presence: true
   validates :basic_work_time, presence: true
-  validates :designated_work_srart_time, presence: true
+  validates :designated_work_start_time, presence: true
   validates :designated_work_end_time, presence: true
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
@@ -69,7 +70,7 @@ class User < ApplicationRecord
 
   # 更新を許可するカラムを定義
   def self.updatable_attributes
-    ["name", "email", "password", "admin", "basic_work_time", "designated_work_srart_time", "designated_work_end_time", "superior", "affiliation", "employee_number", "uid"]
+    ["name", "email", "password", "admin", "basic_work_time", "designated_work_start_time", "designated_work_end_time", "superior", "affiliation", "employee_number", "uid"]
   end
   
   def locations

@@ -1,20 +1,20 @@
 # coding: utf-8
 
-User.create!(name: "Admin User",
+User.create!(name: "管理者",
              email: "sample@email.com",
              employee_number: "1",
              password: "password",
              password_confirmation: "password",
              admin: true)
 
-User.create!(name: "Superior-1 User",
+User.create!(name: "上長Ａ",
              email: "superior-1@email.com",
              employee_number: "2",
              password: "password",
              password_confirmation: "password",
              superior: true)
              
-User.create!(name: "Superior-2 User",
+User.create!(name: "上長Ｂ",
              email: "superior-2@email.com",
              employee_number: "3",
              password: "password",

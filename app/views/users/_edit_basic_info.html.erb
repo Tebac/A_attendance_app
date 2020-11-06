@@ -1,4 +1,4 @@
-<% provide(:class_text, 'basic-info') %>
+<% provide(:class_text, 'basic_info') %>
 <% provide(:button_text, '更新') %>
 
 <div class="modal-dialog modal-lg modal-dialog-center">
@@ -39,8 +39,8 @@
             <%= f.label :basic_time, class: "label-#{yield(:class_text)}" %>
             <%= f.time_field :basic_time, format: :time, class: "form-control" %>
             
-            <%= f.label :designated_work_srart_time, class: "label-#{yield(:class_text)}" %>
-            <%= f.time_field :designated_work_srart_time, format: :time, class: "form-control" %>
+            <%= f.label :designated_work_start_time, class: "label-#{yield(:class_text)}" %>
+            <%= f.time_field :designated_work_start_time, format: :time, class: "form-control" %>
             
             <%= f.label :designated_work_end_time, class: "label-#{yield(:class_text)}" %>
             <%= f.time_field :designated_work_end_time, format: :time, class: "form-control" %>

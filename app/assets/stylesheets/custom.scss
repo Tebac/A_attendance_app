@@ -108,3 +108,29 @@ p {
 .modal-dialog-center {
   padding-top: 10%;
 }
+
+/* 上長勤怠情報テーブル */
+
+.news p {
+  line-height: 0.8em;
+  padding-bottom: 2px;
+}
+
+.application-form {
+  .btn {
+    margin-top: 10px;
+  }
+}
+
+.notice-superior {
+  border: solid 2px #ff0000;
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.notice-superior:hover {
+  border: solid 2px #f96250;
+  color: #f96250;
+  font-weight: bold;
+  text-decoration: none;
+}

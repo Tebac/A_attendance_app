@@ -20,10 +20,17 @@ class Attendance < ApplicationRecord
       errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
     end
   end
+  
+  def self.search(search)
+    return Attendance.all unless search
+    # 開発環境
+    if Rails.env.development? || Rails.env.test?
+      Attendance.where(['worked_on LIKE ?', "%#{search}%"])
+    else Rails.env.production?
+      # 本番環境
+      Attendance.where(['worked_on::text LIKE ?', "%#{search}%"])
+    end
+  end
     
-# def before_finished_at_update 
-#   if started_at.present? && finished_at.blank?
-#     errors.add(:finished_at,"未入力は無効です") unless Date.current == worked_on
-#   end
-# end
+
 end

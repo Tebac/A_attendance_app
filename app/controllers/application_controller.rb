@@ -1,10 +1,16 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
+  include UsersHelper
+  include AttendancesHelper
 
   $days_of_the_week = %w{日 月 火 水 木 金 土}
 
   # beforフィルター
+   # paramsハッシュからユーザーを取得します。
+    def set_user
+      @user = User.find(params[:id])
+    end
  
   # ログイン済みのユーザーか確認します。
   def logged_in_user
@@ -16,13 +22,17 @@ class ApplicationController < ActionController::Base
   end
 
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
-  # def correct_user
-  #   redirect_to root_url unless current_user?(@user)
-  # end
+  def correct_user
+    redirect_to root_url unless current_user?(@user)
+  end
   
    # システム管理権限所有かどうか判定します。
   def admin_user
     redirect_to root_url unless current_user.admin?
+  end
+  
+  def superior_user
+    redirect_to root_url unless current_user.superior?
   end
   
    # @userが定義されている上で使用する
@@ -31,6 +41,33 @@ class ApplicationController < ActionController::Base
       flash[:danger] = "権限がありません。"
       redirect_to root_url
     end  
+  end
+  
+  # beforeフィルター
+     # @userが定義されている上で使用する
+    def superior_or_correct
+      @user = User.find(params[:user_id]) if @user.blank?
+      unless current_user?(@user) || current_user.superior?
+      flash[:danger] = "権限がありません。"
+      redirect_to root_url
+      end
+    end
+  
+  # 管理アカウントはアクセス不可
+  def admin_exclusion
+    if current_user.admin?
+      redirect_to users_url
+    end
+  end
+  
+  # 自分以外の上長
+  def superior_without_me
+    User.where(superior: true).where.not(id: current_user.id)
+  end
+  
+  # 自分を含めたの上長
+  def superior_add_me
+    User.where(superior: true)
   end
 
 

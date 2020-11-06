@@ -1,0 +1,50 @@
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">残業申請</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%= form_with(model: @schedule,url: schedule_path, method: :patch, local: true) do |f| %>
+          <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>曜日</th>
+                <th>終了予定時間</th>
+                <th>翌日</th>
+                <th>業務処理内容</th>
+                <th>指示者確認㊞</th>
+              </tr>
+            </thead>
+            <tbody>
+            <% @attendances.each do |day| %>
+              <% css_class = 
+            case $days_of_the_week[day.worked_on.wday]
+            when "土"
+            'text-primary'
+            when "日" 
+            'text-danger'
+            end %>
+             <tr>
+              <td><%= l(day.worked_on, format: :short) %></td>
+              <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+    <!--          <!% end %>-->
+                <td><%= f.time_field :schedule_finished_at, class: "form-control" %></td>
+    <!--            <td><!%= f.check_box :next_day, class: "form-control" %></td>-->
+    <!--            <td><!%= f.text_field :reason_change, class: "form-control" %></td>-->
+    <!--            <td><!%= f.select :Instructor_confirmation,{'なし':1,'申請中':2,'承認':3,'否認':4}, class: "form-control" %></td>-->
+            </tr>
+            </tbody>
+          </table>
+          <!--<!%= f.submit "変更を更新する", class: "btn btn-lg btn-primary　btn-block" %>-->
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+      

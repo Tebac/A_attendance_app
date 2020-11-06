@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  get 'schedules/edit'
+  resources :schedules, only: [:edit, :update]
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   
@@ -10,7 +13,6 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   
   resources :users do
-    resources :locations
     collection { post :import }
     
     member do
@@ -20,9 +22,25 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month' # この行が追加対象です。
+      get 'attendances/edit_overtime_request'
+      patch 'attendances/update_overtime_request'
+      get 'attendances/recive_overtime_request'
+      # get 'attend_employees'
+      get 'attendances/one_month_request'
+      patch 'attendances/update_one_month_request'
+      patch 'attendances/confirmation_one_month_request'
+      get 'attendances/edit_overtime_request'
+      patch 'attendances/update_overtime_request'
+      get 'attendances/recive_overtime_request'
+      patch 'attendances/confirmation_overtime_request'
+      get 'attendances/recive_change_attendance_request'
+      patch 'attendances/confirmation_change_attendance_request'
+      get 'attendances/edit_log'
     
     end
-    resources :attendances, only: :update
+    resources :attendances, only: [:edit, :update]
+    resources :locations, only: [:index, :create, :edit, :update, :destroy]
+
   end
   
 end
