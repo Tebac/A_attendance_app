@@ -36,7 +36,7 @@
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
               <td><%= attendance.time_field :end_instruction_time, class: "form-control" %></td>
-              <td><%= attendance.check_box :next_day, class: "form-control" %></td>
+              <td><%= attendance.check_box :next_day %></td>
               <td><%= attendance.text_field :reason_change, placeholder: "入力必須", class: "form-control" %></td>
               <td><%= attendance.collection_select :overtime_superior_id, @superiors, :id, :name,
                                                          {include_blank: true}, {class: "form-control"} %>
