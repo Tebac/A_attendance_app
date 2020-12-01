@@ -18,11 +18,14 @@ gem 'turbolinks',   '~> 5'
 gem 'jbuilder',     '~> 2.5'
 gem 'active_decorator'
 gem 'rails_autolink'
+gem "rack", ">= 2.0.8"
+gem "nokogiri", ">= 1.10.8"
 
 
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'
+  gem 'pry-rails'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 
