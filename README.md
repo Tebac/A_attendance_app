@@ -8,3 +8,4 @@
 * Ruby
 * Rails
 * Git(HTTPSからSSH通信へ変更)2020/8/16
+* Heroku2
