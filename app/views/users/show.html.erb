@@ -3,9 +3,9 @@
   <table class="table table-bordered table-condensed user-table">
     <tr>
       <td colspan = 2>
-        <%= link_to "⇦", user_path(date: @first_day.prev_month),class: "btn btn-info" %>
+        <%= link_to "⇦", user_path(date: @first_day.prev_month),class: "btn btn-info" if current_user?(@user) %>
         <%= l(@first_day, format: :middle) %>勤怠管理表
-        <%= link_to "⇨", user_path(date: @first_day.next_month), class: "btn btn-info" %>
+        <%= link_to "⇨", user_path(date: @first_day.next_month), class: "btn btn-info"  if current_user?(@user) %>
       </td>
       <td>指定勤務開始時間：<%= @user.designated_work_start_time.strftime("%R") %><br>
           指定勤務終了時間：<%= @user.designated_work_end_time.strftime("%R") %></td>

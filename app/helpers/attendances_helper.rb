@@ -40,7 +40,7 @@ module AttendancesHelper
   
   # 勤怠申請決裁の変更のチェックが入っているか？
   def request_confirmed_invalid?(status, check)
-    if (status == "承認" || status == "否認")  && check == "1"
+    if (status == "承認" || status == "否認" || status == "なし")  && check == "1"
       confirmed = true
     else
       confirmed = false
@@ -87,18 +87,15 @@ module AttendancesHelper
           @msg = "備考を入力してください。"
         end
         break
-      elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at(4i)'] == "" && item['changed_started_at(5i)'] == "" && item['changed_finished_at(4i)'] == "" && item['changed_finished_at(5i)'] == ""
+      elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] == "" && item['changed_finished_at'] == ""
         attendances = false
         break
-      elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at(4i)'] == "" || item['changed_started_at(5i)'] == "" || item['changed_finished_at(4i)'] == "" || item['changed_finished_at(5i)'] == ""
+      elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] == "" || item['changed_finished_at'] == ""
         attendances = false
         break
-      elsif item['changed_started_at(4i)'] > item['changed_finished_at(4i)'] && item[:change_next_day_check] == "0"
+      elsif item[:changed_started_at] > item[:changed_finished_at] && item[:change_next_day_check] == "0"
         attendances = false
-        break
-      elsif
-        item['changed_started_at(4i)'] == item['changed_finished_at(4i)'] && item['changed_started_at(5i)'] > item['changed_finished_at(5i)'] && item[:change_next_day_check] == "0"
-        attendances = false
+        @msg = "翌日指定してください。"
         break
       end
     end
@@ -107,7 +104,7 @@ module AttendancesHelper
   
   # 上長選択とtime_selectに任意の値が入力されていない場合の評価
   def time_select_invalid?(item)
-    item[:change_superior_id].present? && item["started_at(4i)"] == "" && item["started_at(5i)"] == "" && item["finished_at(4i)"] == "" && item["finished_at(5i)"] == ""
+    item[:change_superior_id].present? && item["started_at"] == "" && item["finished_at"] == ""
   end
   
   # 1ヶ月勤怠申請先の上長の選択されているか？
@@ -172,6 +169,8 @@ module AttendancesHelper
       "　残業否認"
     when "承認"
       "　残業承認"
+    when "なし"
+    "　残業申請「なし」"
     else
     end
   end
@@ -197,6 +196,7 @@ module AttendancesHelper
     when "承認"
       "　勤怠編集承認︎︎"
     when "なし"
+      "　勤怠編集「なし」"
     else
     end
   end

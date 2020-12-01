@@ -29,11 +29,12 @@
         <% end %>
       </div>
     
-      <table class="table table-condensed table-hover" id="table-users">
+      <table class="table table-condensed" id="table-users">
         <% @users.where.not(id: "1").each do |user| %>
         <thead>
           <tr>
             <th><%= user.name %></th>
+            <th></th>
           </tr>
         </thead>
           <tr>
@@ -50,7 +51,7 @@
           </tr>
           <tr>
             <td>
-              <div id="<%= user.id %>" class="collapse" >
+              <div id="<%= user.id %>" class="collapse">
                 <div class="card card-body">
                     <div class="row">
                       <% @user = user %>

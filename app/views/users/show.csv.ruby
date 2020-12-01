@@ -9,7 +9,7 @@ CSV.generate do |csv|
       $days_of_the_week[day.worked_on.wday],
       (day.changed_started_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_started_at.present? && day.change_status != "申請中" && day.change_status != "否認"),
       (day.changed_finished_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認"),
-      (format("%.2f", working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.change_next_day)) if
+      (format("%.2f", working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.next_day)) if
       day.changed_started_at.present? && day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認")
     ]
     csv << column_values

@@ -30,10 +30,10 @@
               <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
               <td><%= attendance.time_field :changed_started_at, class: "form-control" %></td>
               <td><%= attendance.time_field :changed_finished_at, class: "form-control" %></td>
-              <td><%= attendance.check_box :change_next_day %></td>
+              <td><%= attendance.check_box :next_day %></td>
               <td>
                 <% if day.changed_started_at.present? && day.changed_finished_at.present? %>
-                  <%= working_times(day.changed_started_at, day.changed_finished_at, day.change_next_day) %>
+                  <%= working_times(day.changed_started_at, day.changed_finished_at, day.next_day) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "入力必須", class: "form-control" %></td>
@@ -53,7 +53,7 @@
   </div>
 
   <div class="center">
-    <%= f.submit "まとめて更新", class: "btn btn-lg btn-primary" %>
+    <%= f.submit "編集を保存", class: "btn btn-lg btn-primary" %>
     <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-default" %>
   </div>
 <% end %>

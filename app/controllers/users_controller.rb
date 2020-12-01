@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   
   before_action :set_user, only: %i(show edit update destroy)
   before_action :logged_in_user, only: %i(index show edit update edit_basic_info import)
-  before_action :admin_user, only: %i(index edit update destroy)
+  before_action :admin_user, only: %i(index employees_working locations edit_all_basic_info edit update destroy)
   # before_action :correct_user, only: %i(edit update)
   # before_action :admin_or_correct, only: %i(show)
   # before_action :superior_user
