@@ -23,26 +23,32 @@ class ApplicationController < ActionController::Base
 
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
   def correct_user
-    redirect_to root_url unless current_user?(@user)
+    unless current_user?(@user)
+    flash[:danger] = "閲覧不可ページにアクセスしようとしています。"
+      redirect_to root_url
+    end
   end
   
    # システム管理権限所有かどうか判定します。
   def admin_user
     unless current_user.admin?
-      flash[:danger] = "権限がありません。"
+      flash[:danger] = "管理者権限が必要です。"
       redirect_to root_url
     end
   end
   
   def superior_user
-    redirect_to root_url unless current_user.superior?
+    unless current_user.superior?
+    flash[:danger] = "上長権限が必要です。"
+      redirect_to root_url
+    end
   end
   
    # @userが定義されている上で使用する
   def admin_or_correct
     unless current_user?(@user) || current_user.admin?
       flash[:danger] = "権限がありません。"
-      redirect_to root_url
+      redirect_to root_url 
     end  
   end
   
@@ -51,8 +57,8 @@ class ApplicationController < ActionController::Base
     def superior_or_correct
       @user = User.find(params[:user_id]) if @user.blank?
       unless current_user?(@user) || current_user.superior?
-      flash[:danger] = "権限がありません。"
-      redirect_to root_url
+      flash[:danger] = "アクセス権限がありません。"
+      redirect_to root_url 
       end
     end
   

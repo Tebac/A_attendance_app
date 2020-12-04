@@ -11,13 +11,14 @@ class LocationsController < ApplicationController
   
   def create
     location = Location.new
+    location.location_number = "未設定"
     location.location_name = "未設定"
     location.location_type = "未設定"
     if location.save
-      flash[:success] = '新しい拠点を追加しました。拠点名と勤怠種類を設定してください。'
+      flash[:success] = '新しい拠点を追加しました。拠点番号、拠点名、勤怠種類を設定してください。'
       redirect_to user_locations_url 
     else
-      flash[:danger] = "追加できませんでした。"
+      flash[:danger] = "入力に不備があり、追加できませんでした。"
       redirect_to user_locations_url
     end
   end
@@ -47,7 +48,7 @@ class LocationsController < ApplicationController
 private
 
   def location_params
-    params.require(:location).permit(:location_name, :location_type)
+    params.require(:location).permit(:location_number, :location_name, :location_type)
   end
   
   # def set_user

@@ -56,7 +56,7 @@ class AttendancesController < ApplicationController
               attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
           end
         end
-          flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+          flash[:success] = "勤怠変更を申請しました。"
           redirect_to user_url(date: params[:date])
       else
           flash[:danger] = "#{INVALID_MSG}#{@msg}"
@@ -104,7 +104,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "1ヶ月勤怠申請の決裁を更新しました。（但し、チェックがない場合と「なし」の場合は更新されません）"
+    flash[:success] = "1ヶ月勤怠申請の決裁を実施しました。（但し、チェックがない場合、更新されていません）"
     redirect_back(fallback_location: root_path) # 申請月のページにリダイレクト、エラーが出る前にroot_pathにとんでくれる。
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "エラーが発生した為、1ヶ月勤怠申請の更新がキャンセルされました。"
@@ -132,7 +132,7 @@ class AttendancesController < ApplicationController
           end
         end
       end
-      flash[:success] = "勤怠変更の決裁を更新しました。（但し、チェックがない場合と「なし」の場合は更新されません）"
+      flash[:success] = "勤怠変更の決裁を実施しました。（但し、チェックがない場合、更新されていません）"
       redirect_to user_url(date: params[:date])
     end
   rescue ActiveRecord::RecordInvalid
@@ -207,8 +207,8 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "残業申請の決裁を更新しました。
-    （但し、チェックがない場合と「なし」の場合は更新されません）"
+    flash[:success] = "残業申請の決裁を実施しました。
+    （但し、チェックがない場合、更新されていません）"
     redirect_to @user
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "残業申請の更新がキャンセルされました。"

@@ -33,7 +33,7 @@
               <td><%= attendance.check_box :next_day %></td>
               <td>
                 <% if day.changed_started_at.present? && day.changed_finished_at.present? %>
-                  <%= working_times(day.changed_started_at, day.changed_finished_at, day.next_day) %>
+                  <%= working_times(day.changed_started_at, day.changed_finished_at) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "入力必須", class: "form-control" %></td>

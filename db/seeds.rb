@@ -33,4 +33,4 @@ User.create!(name: "上長Ｂ",
               password_confirmation: password)
 end
 
-Location.create!(location_name: "本社",location_type: "出勤",user_id:1)
+Location.create!(location_name: "本社",location_type: "出勤", location_number: "1")

@@ -1,14 +1,14 @@
 class UsersController < ApplicationController
   
-  before_action :set_user, only: %i(show edit update destroy)
-  before_action :logged_in_user, only: %i(index show edit update edit_basic_info import)
+  before_action :set_user, only: %i(show edit update destroy confirmation_show)
+  before_action :logged_in_user, only: %i(index show edit update edit_basic_info import confirmation_show)
   before_action :admin_user, only: %i(index employees_working locations edit_all_basic_info edit update destroy)
-  # before_action :correct_user, only: %i(edit update)
+  before_action :correct_user, only: %i(show )
   # before_action :admin_or_correct, only: %i(show)
-  # before_action :superior_user
+  before_action :superior_user, only: %i(confirmation_show) 
   before_action :admin_exclusion, only: %i(show)
-  before_action :superior_or_correct, only: %i(show)
-  before_action :set_one_month, only: :show
+  # before_action :superior_or_correct, only: %i(show)
+  before_action :set_one_month, only: %i(show confirmation_show)
     
 
     def index
@@ -48,6 +48,10 @@ class UsersController < ApplicationController
     end
     end
     
+    def confirmation_show
+       @worked_sum = @attendances.where.not(started_at: nil).count
+    end
+    
     def new
       @user = User.new
     end
@@ -56,7 +60,7 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
       if @user.save
       log_in @user
-      flash[:success] = '新規作成に成功しました。'
+      flash[:success] = 'アカウントを新規作成しました。'
       redirect_to @user
       else
       render :new
@@ -84,7 +88,8 @@ class UsersController < ApplicationController
     
   private
     def user_params
-      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :superior, :admin, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :superior, :admin, :password, :password_confirmation,
+                                    :basic_time, :designated_work_start_time, :designated_work_end_time)
     end
   
     
@@ -97,11 +102,11 @@ class UsersController < ApplicationController
     #   redirect_to root_url unless current_user.superior?
     # end
      
-    def superior_or_correct
-      unless current_user?(@user) || current_user.superior?
-      flash[:danger] = "権限がありません。"
-      redirect_to root_url
-      end
-    end
+    # def superior_or_correct
+    #   unless current_user?(@user) || current_user.superior?
+    #   flash[:danger] = "権限がありません。"
+    #   redirect_to root_url
+    #   end
+    # end
  
 end

@@ -76,7 +76,7 @@
                           <%= at.check_box :change_check %>
                           <%= at.hidden_field :change_approval, value: 3 %>
                         </td>
-                        <td class="center"><%= link_to "確認", user_path(id: user.id, date: attendance.worked_on.beginning_of_month), class: "btn btn-lg btn-primary" %></td>
+                        <td class="center"><%= link_to "確認", confirmation_show_user_path(id: user.id, date: attendance.worked_on.beginning_of_month), class: "btn btn-lg btn-primary" %></td>
                       </tr>
                     </tbody>
                   <% end %>

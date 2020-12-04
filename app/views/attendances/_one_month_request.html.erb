@@ -16,7 +16,7 @@
                     <thead>
                       <tr>
                         <th class="center">月</th>
-                        <th class="center">指示者確認㊞ %></th>
+                        <th class="center">指示者確認㊞</th>
                         <th class="center">変更</th>
                         <th class="center">勤怠を確認する</th>
                       </tr>
@@ -39,7 +39,7 @@
                             <%= at.check_box :month_check %>
                             <%= at.hidden_field :month_approval, value: 3 %>
                           </td>
-                          <td class="center"><%= link_to "確認", user_path(id: user.id, date: attendance.month_request), class: "btn btn-primary" %></td>
+                          <td class="center"><%= link_to "確認", confirmation_show_user_path(id: user.id, date: attendance.month_request), class: "btn btn-primary" %></td>
                         </tr>
                       </tbody>
                     <% end %>

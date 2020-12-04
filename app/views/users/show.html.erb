@@ -24,26 +24,29 @@
 </div>
 <% if current_user.superior? && current_user?(@user) %>
     <div class="news">
-      <p>
-        【所属長承認申請のお知らせ】
-        <% unless one_month_request.count == 0 %>
-          <%= link_to "通知が#{one_month_request.count}件あります。",
+      <% if one_month_request.count == 0 %>
+        <p>【所属長承認申請のお知らせ】
+      <% else %>
+        <%= link_to"【所属長承認申請のお知らせ】",attendances_one_month_request_user_path(@user), remote: true %>
+        <%= link_to "通知が#{one_month_request.count}件あります。",
                       attendances_one_month_request_user_path(@user), remote: true, class: "notice-superior" %>
-        <% end %>
+      <% end %>
       </p>
-      <p>
-        【勤怠変更申請のお知らせ】
-        <% unless change_attendance_request.count == 0 %>
+      <% if change_attendance_request.count == 0 %>
+      <p> 【勤怠変更申請のお知らせ】
+      <% else %>
+          <%= link_to "【勤怠変更申請のお知らせ】", attendances_recive_change_attendance_request_user_path(date: @first_day), remote: true %>
           <%= link_to "通知が#{change_attendance_request.count}件あります。",
-                       attendances_recive_change_attendance_request_user_path(date: @first_day), remote: true, class: "notice-superior" %>
-        <% end %>
+                       attendances_recive_change_attendance_request_user_path(date: @first_day), remote: true, class: "notice-superior" %>             
+      <% end %>
       </p>
-      <p>
-        【残業申請のお知らせ】
-        <% unless notice_overtime_request.count == 0 %>
-          <%= link_to "通知が#{notice_overtime_request.count}件あります。",
+      <% if notice_overtime_request.count == 0 %>
+      <p>【残業申請のお知らせ】
+      <% else %>
+      <%= link_to "【残業申請のお知らせ】",attendances_recive_overtime_request_user_path(@user), remote: true %>
+      <%= link_to "通知が#{notice_overtime_request.count}件あります。",
                       attendances_recive_overtime_request_user_path(@user), remote: true, class: "notice-superior" %>
-        <% end %>
+      <% end %>
       </p>
     </div>
   <% end %>
@@ -52,7 +55,7 @@
   <% if current_user?(@user) %>
     <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-success" %>
     <%= link_to "CSV出力", user_path(date: @first_day, format: :csv), class: "btn btn-primary" %>
-    <%= link_to "勤怠編集ログ(承認済)", attendances_edit_log_user_path(date: @first_day), class: "btn btn-primary" %>
+    <%= link_to "勤怠修正ログ(承認済)", attendances_edit_log_user_path(date: @first_day), class: "btn btn-primary" %>
   <% end %>
 </div>
 
@@ -107,6 +110,23 @@
             'text-danger'
             end %>
           <td class="<%= css_class %>" id="wday"><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <% if day.change_status == "承認" %>
+          <td><%= l(round_s(day.changed_started_at),format: :timeH) if day.changed_started_at.present? %></td>
+          <td><%= l(round_s(day.changed_started_at),format: :timeM) if day.changed_started_at.present? %></td>
+          <td>
+            <% if btn_text = attendance_state(day) %>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
+          <td><%= l(round_f(day.changed_finished_at), format: :timeH) if day.changed_finished_at.present? %></td>
+          <td><%= l(round_f(day.changed_finished_at), format: :timeM) if day.changed_finished_at.present? %></td>
+          <td>
+            <% if day.changed_started_at.present? && day.changed_finished_at.present? %>
+            <%= str_times = working_times(day.changed_started_at, day.changed_finished_at) %>
+            <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+           <% end %>
+          </td>
+          <% else %>
           <td><%= l(round_s(day.started_at),format: :timeH) if day.started_at.present? %></td>
           <td><%= l(round_s(day.started_at),format: :timeM) if day.started_at.present? %></td>
           <td>
@@ -118,11 +138,13 @@
           <td><%= l(round_f(day.finished_at), format: :timeM) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-            <%= str_times = working_times_ed(day.started_at, day.finished_at) %>
+            <%= str_times = working_times(day.started_at, day.finished_at) %>
             <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
            <% end %>
           </td>
+          <% end %>
           <td><%= day.note %></td>
+          <% if day.overtime_approval == 3 %>
           <td><%= day.end_instruction_time.strftime("%-H") if day.end_instruction_time.present? %></td>
           <td><%= day.end_instruction_time.floor_to(15.minutes).strftime("%M") if day.end_instruction_time.present? %></td>
           <td>
@@ -130,6 +152,13 @@
             <% @total_overtime_working = @total_overtime_working.to_f + day.overtime_hours.to_f.floor_to(0.25) %>
           </td>
           <td><%= day.reason_change %></td>
+          <% else %>
+          <td><% day.end_instruction_time.strftime("%-H") if day.end_instruction_time.present? %></td>
+          <td><% day.end_instruction_time.floor_to(15.minutes).strftime("%M") if day.end_instruction_time.present? %></td>
+          <td><% format("%.2f", day.overtime_hours.to_f.floor_to(0.25)) if day.end_instruction_time.present? %>
+          <% @total_overtime_working = @total_overtime_working.to_f + day.overtime_hours.to_f.floor_to(0.25) %></td>
+          <td><% day.reason_change %></td>
+          <% end %>
           <% if day.note.present? || day.reason_change.present? %>
           <td>
             <%= day.change_superior_name %><%= change_status_text(day.change_status) %>

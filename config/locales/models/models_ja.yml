@@ -28,7 +28,7 @@ ja:
           note: 備考
           user: ユーザーID
         location:
-          id: 拠点番号
+          location_number: 拠点番号
           location_name: 拠点名
           location_type: 勤怠種類
           user: 管理者

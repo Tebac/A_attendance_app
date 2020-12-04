@@ -17,8 +17,8 @@
         <%= form_with(model: @location, url: user_location_path, local: true, method: :patch) do |f| %>
       
       
-        <%= f.label :id, class: "label-#{yield(:class_text)}" %>
-        <%= f.text_field :id, class: "form-control" %>
+        <%= f.label :location_number, class: "label-#{yield(:class_text)}" %>
+        <%= f.text_field :location_number, class: "form-control" %>
        
         <%= f.label :location_name, class: "label-#{yield(:class_text)}" %>
         <%= f.text_field :location_name, class: "form-control" %>

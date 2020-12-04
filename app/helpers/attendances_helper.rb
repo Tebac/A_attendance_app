@@ -4,25 +4,25 @@ module AttendancesHelper
     # 受け取ったAttendanceオブジェクトが当日と一致するか評価します。
     if Date.current == attendance.worked_on
       return '出勤' if attendance.started_at.nil?
-      return '退出' if attendance.started_at.present? && attendance.finished_at.nil?
+      return '退勤' if attendance.started_at.present? && attendance.finished_at.nil?
     end
     # どれにも当てはまらなかった場合はfalseを返します。
     return false
   end
 
   # 出勤時間と退勤時間を受け取り、在社時間を計算して返します。
-  def working_times(start, finish, next_day)
-    if next_day == "1" 
-       format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+  def working_times(start, finish)
+    if params[:next_day] == ""
+       format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
     else
-      format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+      format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
     end
   end
   
 #当日内勤務
-  def working_times_ed(start, finish)
-    format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-  end
+  # def working_times_ed(start, finish)
+  #   format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+  # end
   
   def round_s(start)
     start.floor_to(15.minutes)
@@ -93,7 +93,7 @@ module AttendancesHelper
       elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] == "" || item['changed_finished_at'] == ""
         attendances = false
         break
-      elsif item[:changed_started_at] > item[:changed_finished_at] && item[:change_next_day_check] == "0"
+      elsif item[:changed_started_at] > item[:changed_finished_at] && item[:next_day] == "0"
         attendances = false
         @msg = "翌日指定してください。"
         break
@@ -190,13 +190,13 @@ module AttendancesHelper
   def change_status_text(status)
     case status
     when "申請中"
-      "　勤怠編集申請中"
+      "　勤怠変更申請中"
     when "否認"
-      "　勤怠編集否認"
+      "　勤怠変更否認"
     when "承認"
-      "　勤怠編集承認︎︎"
+      "　勤怠変更承認︎︎"
     when "なし"
-      "　勤怠編集「なし」"
+      "　勤怠変更「なし」"
     else
     end
   end

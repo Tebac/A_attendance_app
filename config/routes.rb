@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       get 'employees_working'
       get 'edit_basic_info'
       get 'edit_all_basic_info'
+      get 'confirmation_show'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month' # この行が追加対象です。
