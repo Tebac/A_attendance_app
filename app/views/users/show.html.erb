@@ -121,10 +121,10 @@
           <td><%= l(round_f(day.changed_finished_at), format: :timeH) if day.changed_finished_at.present? %></td>
           <td><%= l(round_f(day.changed_finished_at), format: :timeM) if day.changed_finished_at.present? %></td>
           <td>
-            <% if day.changed_started_at.present? && day.changed_finished_at.present? %>
-            <%= str_times = working_times(day.changed_started_at, day.changed_finished_at) %>
+            <% if day.changed_started_at.present? && day.changed_finished_at.present? && day.next_day.present? %>
+            <%= str_times = working_times(day.changed_started_at, day.changed_finished_at, day.next_day) %>
             <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-           <% end %>
+            <% end %>
           </td>
           <% else %>
           <td><%= l(round_s(day.started_at),format: :timeH) if day.started_at.present? %></td>
@@ -137,10 +137,10 @@
           <td><%= l(round_f(day.finished_at), format: :timeH) if day.finished_at.present? %></td>
           <td><%= l(round_f(day.finished_at), format: :timeM) if day.finished_at.present? %></td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
-            <%= str_times = working_times(day.started_at, day.finished_at) %>
+            <% if day.started_at.present? && day.finished_at.present? && day.next_day.present? %>
+            <%= str_times = working_times(day.started_at, day.finished_at, day.next_day) %>
             <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-           <% end %>
+            <% end %>
           </td>
           <% end %>
           <td><%= day.note %></td>

@@ -11,17 +11,19 @@ module AttendancesHelper
   end
 
   # 出勤時間と退勤時間を受け取り、在社時間を計算して返します。
-  def working_times(start, finish)
-    if params[:next_day] == ""
-       format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-    else
+  def working_times(start, finish, flag)
+    if flag == "1"
       format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+    else
+      format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
     end
   end
   
 #当日内勤務
   # def working_times_ed(start, finish)
-  #   format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+  #   if params[:next_day] == "1"
+  #     format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+  #   end
   # end
   
   def round_s(start)
