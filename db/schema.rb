@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20201204120700) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.time "working_time"
-    t.datetime "schedule_started_at", default: "2020-12-05 01:00:00"
-    t.datetime "schedule_finished_at", default: "2020-12-05 10:00:00"
+    t.datetime "schedule_started_at", default: "2020-12-06 01:00:00"
+    t.datetime "schedule_finished_at", default: "2020-12-06 10:00:00"
     t.datetime "overtime"
     t.datetime "end_instruction_time"
     t.string "instructor_confirmation"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20201204120700) do
   end
 
   create_table "schedules", force: :cascade do |t|
-    t.datetime "schedule_finished_at", default: "2020-12-05 10:00:00"
+    t.datetime "schedule_finished_at", default: "2020-12-06 10:00:00"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -82,11 +82,11 @@ ActiveRecord::Schema.define(version: 20201204120700) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2020-12-04 23:00:00"
-    t.datetime "work_time", default: "2020-12-04 22:30:00"
-    t.datetime "basic_work_time", default: "2020-12-04 23:00:00"
-    t.datetime "designated_work_start_time", default: "2020-12-05 01:00:00"
-    t.datetime "designated_work_end_time", default: "2020-12-05 10:00:00"
+    t.datetime "basic_time", default: "2020-12-05 23:00:00"
+    t.datetime "work_time", default: "2020-12-05 22:30:00"
+    t.datetime "basic_work_time", default: "2020-12-05 23:00:00"
+    t.datetime "designated_work_start_time", default: "2020-12-06 01:00:00"
+    t.datetime "designated_work_end_time", default: "2020-12-06 10:00:00"
     t.boolean "superior", default: false
     t.string "affiliation", default: "未所属"
     t.integer "employee_number"
