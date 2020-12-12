@@ -1,5 +1,33 @@
+require 'active_model'
+
 class Attendance < ApplicationRecord
+  
   belongs_to :user
+  include ActiveModel::Dirty
+  define_attribute_methods :changed_started_at, :changed_finished_at
+  
+  def changed_started_at
+    @changed_started_at
+  end
+
+  def changed_started_at=(value)
+    changed_started_at_will_change!
+    @changed_started_at = value
+  end
+
+  def changed_finished_at
+    @changed_finished_at
+  end
+
+  def changed_finished_at=(value)
+    changed_finished_at_will_change!
+    @changed_finished_at = value
+  end
+
+  def save
+    # 保存を実行
+    changes_applied
+  end
 
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
@@ -16,7 +44,7 @@ class Attendance < ApplicationRecord
   end
 
   def started_at_than_finished_at_fast_if_invalid
-    if started_at.present? && finished_at.present? && next_day == "0"
+    if started_at.present? && finished_at.present? && next_day == "0" && next_day_of_change == "0"
       errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
     end
   end

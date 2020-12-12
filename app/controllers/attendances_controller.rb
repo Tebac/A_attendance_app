@@ -223,7 +223,7 @@ class AttendancesController < ApplicationController
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :changed_started_at, :changed_finished_at,
                                                  :note, :change_superior_id, :change_status, :change_check,
-                                                 :change_approval, :next_day, :calendar_day])[:attendances]
+                                                 :change_approval,:next_day, :next_day_of_change, :calendar_day])[:attendances]
     end
     
     # 勤怠変更申請承認
@@ -253,9 +253,9 @@ class AttendancesController < ApplicationController
     end
 
     
-    def attendances_overtime_request_params
-      params.require(:user).permit(attendances: [:schedule_finished_at, :next_day, :reason_change, :instructor_confirmation])[:attendances]
-    end
+    # def attendances_overtime_request_params
+    #   params.require(:user).permit(attendances: [:schedule_finished_at, :next_day, :reason_change, :instructor_confirmation])[:attendances]
+    # end
 
     
 end

@@ -12,12 +12,25 @@ module AttendancesHelper
 
   # 出勤時間と退勤時間を受け取り、在社時間を計算して返します。
   def working_times(start, finish, flag)
-    if flag == "1"
-      format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-    else
-      format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-    end
+    # if finish - start < 900
+      if flag == "1"
+        format("%.2f", ((((finish + 86400) - start) / 60 / 60.0) / 0.25) * 0.25)
+      else
+        format("%.2f", (((finish - start) / 60 / 60.0) / 0.25) * 0.25)
+      end
+    # else
+    #   if flag == "1"
+    #     format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+    #   else
+    #     format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
+    #   end
+    # end
   end
+  
+  # def new_record?(time)
+  #   time_in_database <= Time.zone.now
+  # end
+
   
 #当日内勤務
   # def working_times_ed(start, finish)
@@ -95,7 +108,7 @@ module AttendancesHelper
       elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] == "" || item['changed_finished_at'] == ""
         attendances = false
         break
-      elsif item[:changed_started_at] > item[:changed_finished_at] && item[:next_day] == "0"
+      elsif item[:changed_started_at] > item[:changed_finished_at] && item[:next_day_of_change] == "0"
         attendances = false
         @msg = "翌日指定してください。"
         break

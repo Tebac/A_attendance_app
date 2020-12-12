@@ -1,4 +1,7 @@
 <% provide(:title, @user.name) %>
+<div class="col-md-2">
+  <%= link_to "戻る",:back, class: "btn btn-block btn-default" %>
+</div>
 <h1>勤怠ログ</h1>
 
 <%= form_tag(attendances_edit_log_user_path, method: :get) do %>

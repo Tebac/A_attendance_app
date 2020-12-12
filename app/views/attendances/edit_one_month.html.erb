@@ -2,6 +2,10 @@
 <%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
   <div>
     <h1>勤怠編集画面</h1>
+    <div class="center">
+      <%= f.submit "編集を保存", class: "btn btn-lg btn-primary" %>
+      <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-default" %>
+    </div>
     <table class="table table-bordered table-condensed table-hover" id="table-attendances">
       <thead>
         <tr>
@@ -30,10 +34,10 @@
               <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
               <td><%= attendance.time_field :changed_started_at, class: "form-control" %></td>
               <td><%= attendance.time_field :changed_finished_at, class: "form-control" %></td>
-              <td><%= attendance.check_box :next_day %></td>
+              <td><%= attendance.check_box :next_day_of_change %></td>
               <td>
-                <% if day.changed_started_at.present? && day.changed_finished_at.present? && day.next_day.present?%>
-                  <%= working_times(day.changed_started_at, day.changed_finished_at, day.next_day) %>
+                <% if day.changed_started_at.present? && day.changed_finished_at.present? && day.next_day_of_change.present?%>
+                  <%= working_times(day.changed_started_at, day.changed_finished_at, day.next_day_of_change) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "入力必須", class: "form-control" %></td>
