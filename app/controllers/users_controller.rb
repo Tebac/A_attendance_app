@@ -3,12 +3,16 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i(show edit update destroy confirmation_show)
   before_action :logged_in_user, only: %i(index show edit update edit_basic_info import confirmation_show)
   before_action :admin_user, only: %i(index employees_working locations edit_all_basic_info edit update destroy)
-  before_action :correct_user, only: %i(show )
+  before_action :correct_user, only: %i(show)
   # before_action :admin_or_correct, only: %i(show)
   before_action :superior_user, only: %i(confirmation_show) 
+  before_action :superior_himself, only: %i(confirmation_show) 
   before_action :admin_exclusion, only: %i(show)
   # before_action :superior_or_correct, only: %i(show)
   before_action :set_one_month, only: %i(show confirmation_show)
+  before_action :one_month_request, only: %i(confirmation_show)
+  before_action :notice_overtime_request, only: %i(confirmation_show)
+  before_action :change_attendance_request, only: %i(confirmation_show)
     
 
     def index
@@ -49,7 +53,15 @@ class UsersController < ApplicationController
     end
     
     def confirmation_show
-       @worked_sum = @attendances.where.not(started_at: nil).count
+      @worked_sum = @attendances.where.not(started_at: nil).count
+      @superiors = superior_without_me
+      @superiors_all = superior_add_me
+      @month = set_one_month_request
+      
+      if @attendances.where.not(superior_id: current_user.id).present? || @attendances.where.not(change_superior_id: current_user.id).present? || @attendances.where.not(overtime_superior_id: current_user.id).present?
+        flash[:danger] = "アクセス不可。"
+         redirect_to root_url and return
+      end
     end
     
     def new
@@ -108,5 +120,6 @@ class UsersController < ApplicationController
     #   redirect_to root_url
     #   end
     # end
+    
  
 end

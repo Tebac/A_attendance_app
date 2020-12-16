@@ -18,14 +18,15 @@ module AttendancesHelper
       else
         format("%.2f", (((finish - start) / 60 / 60.0) / 0.25) * 0.25)
       end
-    # else
-    #   if flag == "1"
-    #     format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-    #   else
-    #     format("%.2f", ((((finish - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-    #   end
-    # end
   end
+  
+  def working_times_show(start, finish)
+    format("%.2f", (((finish - start) / 60 / 60.0) / 0.25) * 0.25)
+  end
+  
+  # def before_last_save(time)
+  #   Attendance.time_was
+  # end
   
   # def new_record?(time)
   #   time_in_database <= Time.zone.now

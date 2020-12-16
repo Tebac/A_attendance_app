@@ -27,13 +27,13 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     # 出勤時間が未登録であることを判定します。
     if @attendance.started_at.nil?
-      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0))
+      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0).floor_to(15.minutes))
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil?
-      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0))
+      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0).floor_to(15.minutes))
         flash[:info] = "お疲れ様でした。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
@@ -41,6 +41,13 @@ class AttendancesController < ApplicationController
     end
     redirect_to @user
   end
+  
+  # def before_last_save(time)
+  #   attendance
+  #   Attendance.time_was
+  # end
+    
+    
 
   def edit_one_month
     @superiors = superior_without_me
@@ -104,7 +111,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "1ヶ月勤怠申請の決裁を実施しました。（但し、チェックがない場合、更新されていません）"
+    flash[:success] = "1ヶ月勤怠申請の決裁を実施しました。（但し、チェックがない場合、更新されて��ません）"
     redirect_back(fallback_location: root_path) # 申請月のページにリダイレクト、エラーが出る前にroot_pathにとんでくれる。
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "エラーが発生した為、1ヶ月勤怠申請の更新がキャンセルされました。"
@@ -123,13 +130,15 @@ class AttendancesController < ApplicationController
         if request_confirmed_invalid?(item[:change_status], item[:change_check])
           attendance = Attendance.find(id)
           item[:approval_date] = Time.current
-          attendance.update_attributes(item)
-          if item[:change_status] == "否認"
+          if item[:change_status] == "承認"
+             item[:started_at] = attendance.changed_started_at
+             item[:finished_at] = attendance.changed_finished_at
+          elsif item[:change_status] == "否認"
             item[:change_approval] = 2
             item[:change_check] = "0"
             item[:approval_date] = nil
-            attendance.update_attributes(item)
           end
+          attendance.update_attributes(item)
         end
       end
       flash[:success] = "勤怠変更の決裁を実施しました。（但し、チェックがない場合、更新されていません）"
@@ -228,7 +237,7 @@ class AttendancesController < ApplicationController
     
     # 勤怠変更申請承認
     def confirmation_attendances_params
-      params.permit(attendances: [:change_status, :change_approval, :change_check])[:attendances]
+      params.permit(attendances: [:started_at, :finished_at,:change_status, :change_approval, :change_check])[:attendances]
     end
     
     # 1ヶ月の勤怠申請
