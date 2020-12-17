@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  default_scope -> { order(id: :asc) }
   has_many :attendances, dependent: :destroy
   has_many :locations, dependent: :destroy
   has_many :schedules, dependent: :destroy
