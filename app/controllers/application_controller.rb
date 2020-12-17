@@ -72,11 +72,8 @@ class ApplicationController < ActionController::Base
   # 上長本人
   def superior_himself
     unless User.where(superior: true).where(id: current_user.id)
-    
-      # debugger
       flash[:danger] = "アクセス不可。"
       redirect_to root_url and return
-        
     end
   end
   

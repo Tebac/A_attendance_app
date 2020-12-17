@@ -58,7 +58,8 @@ class UsersController < ApplicationController
       @superiors_all = superior_add_me
       @month = set_one_month_request
       
-      if @attendances.where.not(superior_id: current_user.id).present? || @attendances.where.not(change_superior_id: current_user.id).present? || @attendances.where.not(overtime_superior_id: current_user.id).present?
+      unless @attendances.where(superior_id: current_user.id).present? || @attendances.where(change_superior_id: current_user.id).present? || @attendances.where(overtime_superior_id: current_user.id).present?
+      
         flash[:danger] = "アクセス不可。"
          redirect_to root_url and return
       end
