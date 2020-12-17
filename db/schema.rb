@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20201207031433) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.time "working_time"
-    t.datetime "schedule_started_at"
-    t.datetime "schedule_finished_at"
+    t.datetime "change_before_started_at"
+    t.datetime "change_before_finished_at"
     t.datetime "overtime"
     t.datetime "end_instruction_time"
     t.string "instructor_confirmation"

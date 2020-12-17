@@ -27,13 +27,13 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     # 出勤時間が未登録であることを判定します。
     if @attendance.started_at.nil?
-      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0).floor_to(15.minutes))
+      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0).floor_to(15.minutes), change_before_started_at: Time.current.change(sec: 0).floor_to(15.minutes))
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil?
-      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0).floor_to(15.minutes))
+      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0).floor_to(15.minutes),change_before_finished_at: Time.current.change(sec: 0).floor_to(15.minutes))
         flash[:info] = "お疲れ様でした。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
@@ -111,7 +111,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "1ヶ月勤怠申請の決裁を実施しました。（但し、チェックがない場合、更新されて��ません）"
+    flash[:success] = "1ヶ月勤怠申請の決裁を実施しました。（但し、「変更」チェックがない場合、更新されていません）"
     redirect_back(fallback_location: root_path) # 申請月のページにリダイレクト、エラーが出る前にroot_pathにとんでくれる。
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "エラーが発生した為、1ヶ月勤怠申請の更新がキャンセルされました。"
@@ -141,7 +141,7 @@ class AttendancesController < ApplicationController
           attendance.update_attributes(item)
         end
       end
-      flash[:success] = "勤怠変更の決裁を実施しました。（但し、チェックがない場合、更新されていません）"
+      flash[:success] = "勤怠変更の決裁を実施しました。（但し、「変更」チェックがない場合、更新されていません）"
       redirect_to user_url(date: params[:date])
     end
   rescue ActiveRecord::RecordInvalid
@@ -217,7 +217,7 @@ class AttendancesController < ApplicationController
       end
     end
     flash[:success] = "残業申請の決裁を実施しました。
-    （但し、チェックがない場合、更新されていません）"
+    （但し、「変更」チェックがない場合、更新されていません）"
     redirect_to @user
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "残業申請の更新がキャンセルされました。"

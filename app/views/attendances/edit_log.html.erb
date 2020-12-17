@@ -40,8 +40,8 @@
                 <% end %>
                 (<%= $days_of_the_week[day.worked_on.wday] %>)
                 </td>
-              <td class="center"><%= day.started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
-              <td class="center"><%= day.finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
+              <td class="center"><%= day.change_before_started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
+              <td class="center"><%= day.change_before_finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
               <td class="center"><%= day.changed_started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
               <td class="center"><%= day.changed_finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
               <td class="center"><%= day.change_superior_name %></td>
@@ -70,8 +70,8 @@
               <% end %>
               (<%= $days_of_the_week[day.worked_on.wday] %>)
             </td>
-            <td class="center"><%= day.started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
-            <td class="center"><%= day.finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
+            <td class="center"><%= day.change_before_started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
+            <td class="center"><%= day.change_before_finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
             <td class="center"><%= day.changed_started_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
             <td class="center"><%= day.changed_finished_at.try(:floor_to, 15.minutes).try(:strftime, "%H:%M") %></td>
             <td class="center"><%= day.change_superior_name %></td>

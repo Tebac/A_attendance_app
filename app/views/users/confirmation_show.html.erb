@@ -17,6 +17,11 @@
     </tr>
   </table>
 </div>
+<div class="col-md-2 col-md-offset-5 center">
+  <%  if current_user.superior? %>
+    <%= link_to "戻る", user_path(current_user), class: "btn btn-lg btn-block btn-default" %>
+  <% end %>
+</div>
 <div>
   <table class="table table-bordered table-condensed table-striped" id="table-attendances">
     <thead>
