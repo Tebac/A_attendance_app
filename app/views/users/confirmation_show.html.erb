@@ -55,7 +55,6 @@
 
     <tbody>
       <% @attendances.each do |day| %>
-      <!--<!% DateTime == day.started_at? %>-->
         <tr>
          <td></td>
           <td><%= l(day.worked_on, format: :short) %></td>
@@ -69,22 +68,19 @@
           <td class="<%= css_class %>" id="wday"><%= $days_of_the_week[day.worked_on.wday] %></td>
           <td><%= l(round_s(day.started_at),format: :timeH) if day.started_at.present? %></td>
           <td><%= l(round_s(day.started_at),format: :timeM) if day.started_at.present? %></td>
-          <td></td>
+          <td>
+            <% if btn_text = attendance_state(day) %>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
           <td><%= l(round_f(day.finished_at), format: :timeH) if day.finished_at.present? %></td>
           <td><%= l(round_f(day.finished_at), format: :timeM) if day.finished_at.present? %></td>
           <td>
-              <% if day.change_status != "承認" %>
-                <% if day.started_at.present? && day.finished_at.present? && %>
-                  <%= str_times = working_times_show(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
-                  <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-                <% end %>
-              <% else %>
-                <% if day.changed_started_at.present? && day.changed_finished_at.present? && day.next_day_of_change.present?%>
-                  <%= working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.next_day_of_change) %>
-                  <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-                <% end %>
-              <% end %>
-            </td>
+            <% if day.started_at.present? && day.finished_at.present? && %>
+              <%= str_times = working_times_show(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% end %>
+          </td>
           <td><%= day.note %></td>
           <% if day.overtime_approval == 3 %>
             <td><%= day.end_instruction_time.strftime("%-H") if day.end_instruction_time.present? %></td>
