@@ -58,7 +58,7 @@ class AttendancesController < ApplicationController
             attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
           end
         end
-        flash[:success] = "勤怠情報を更新しました。"
+        flash[:success] = "勤怠情報編集しました。（申請先を選択していない場合、申請されません。）"
         redirect_to user_url(date: params[:date])
       else
         flash[:danger] = "#{INVALID_MSG}#{@msg}"

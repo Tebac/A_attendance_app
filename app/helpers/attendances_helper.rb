@@ -25,22 +25,6 @@ module AttendancesHelper
     format("%.2f", (((finish - start) / 60 / 60.0) / 0.25) * 0.25)
   end
   
-  # def before_last_save(time)
-  #   Attendance.time_was
-  # end
-  
-  # def new_record?(time)
-  #   time_in_database <= Time.zone.now
-  # end
-
-  
-#当日内勤務
-  # def working_times_ed(start, finish)
-  #   if params[:next_day] == "1"
-  #     format("%.2f", (((((finish + 86400) - start) / 60 / 60.0) / 0.25).to_i) * 0.25)
-  #   end
-  # end
-  
   def round_s(start)
     start.floor_to(15.minutes)
   end
@@ -96,13 +80,8 @@ module AttendancesHelper
   def attendances_invalid?
     attendances = true
     attendances_params.each do |id, item|
-      
-      if item[:change_superior_id].blank? && item[:note].blank? && item['changed_started_at'] == "" && item['changed_finished_at'] == ""
-       next
-      elsif item[:change_superior_id].blank? && item[:note].present? && item['changed_started_at'] != "" && item['changed_finished_at'] != ""
-        attendances = false
-        @msg = "上長を選択してください。"
-        break
+      if item[:change_superior_id].blank? 
+        next
       elsif item[:change_superior_id].present? && item[:note].blank? && item['changed_started_at'] != "" && item['changed_finished_at'] != ""
         attendances = false
           @msg = "備考を入力してください。"
@@ -118,6 +97,7 @@ module AttendancesHelper
         @msg = "翌日指定してください。"
         break
       end
+    
     end
     return attendances
   end
