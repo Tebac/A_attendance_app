@@ -12,12 +12,13 @@ module AttendancesHelper
 
   # 出勤時間と退勤時間を受け取り、在社時間を計算して返します。
   def working_times(start, finish, flag)
-    # if finish - start < 900
+    if start.present? && finish.present? && flag.present?
       if flag == "1"
-        format("%.2f", ((((finish + 86400) - start) / 60 / 60.0) / 0.25) * 0.25)
+        format("%.2f", ((((finish.floor_to(15.minutes) + 86400) - start.floor_to(15.minutes)) / 60 / 60.0) / 0.25) * 0.25)
       else
-        format("%.2f", (((finish - start) / 60 / 60.0) / 0.25) * 0.25)
+        format("%.2f", (((finish.floor_to(15.minutes) - start.floor_to(15.minutes)) / 60 / 60.0) / 0.25) * 0.25)
       end
+    end
   end
   
   def working_times_show(start, finish)
@@ -95,13 +96,16 @@ module AttendancesHelper
   def attendances_invalid?
     attendances = true
     attendances_params.each do |id, item|
-      if item[:change_superior_id].blank?
-        next
-      elsif item[:change_superior_id].present? && item[:note].blank?
+      
+      if item[:change_superior_id].blank? && item[:note].blank? && item['changed_started_at'] == "" && item['changed_finished_at'] == ""
+       next
+      elsif item[:change_superior_id].blank? && item[:note].present? && item['changed_started_at'] != "" && item['changed_finished_at'] != ""
         attendances = false
-        if item[:note].blank?
+        @msg = "上長を選択してください。"
+        break
+      elsif item[:change_superior_id].present? && item[:note].blank? && item['changed_started_at'] != "" && item['changed_finished_at'] != ""
+        attendances = false
           @msg = "備考を入力してください。"
-        end
         break
       elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] == "" && item['changed_finished_at'] == ""
         attendances = false

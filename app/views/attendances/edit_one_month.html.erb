@@ -35,20 +35,15 @@
               <td><%= attendance.time_field :changed_started_at, class: "form-control" %></td>
               <td><%= attendance.time_field :changed_finished_at, class: "form-control" %></td>
               <td><%= attendance.check_box :next_day_of_change %></td>
-              <td>
-                <% if day.changed_started_at.present? && day.changed_finished_at.present? && day.next_day_of_change.present?%>
-                  <%= working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.next_day_of_change) %>
-                <% end %>
-              </td>
+              <td><%= working_times(day.changed_started_at, day.changed_finished_at, day.next_day_of_change) %></td>
               <td><%= attendance.text_field :note, placeholder: "入力必須", class: "form-control" %></td>
-              
-                <td><%= attendance.collection_select :change_superior_id, @superiors, :id, :name,
-                                      {include_blank: true, selected: nil}, class: "form-control" %>
-                    <%= attendance.hidden_field :change_status, value: "申請中" %>
-                    <%= attendance.hidden_field :change_approval, value: 2 %>
-                    <%= attendance.hidden_field :change_check, value: "0" %>
-                    <%= attendance.hidden_field :calendar_day, value: day.worked_on.to_date %>
-                </td>
+<!--f.collection_select(メソッド名, オブジェクトの配列, value属性の項目, テキストの項目 [, オプション or HTML属性 or イベント属性])-->
+              <td><%= attendance.collection_select :change_superior_id, @superiors, :id, :name,{ prompt: "選択してください"}, class: "form-control" %>
+                  <%= attendance.hidden_field :change_status, value: "申請中" %>
+                  <%= attendance.hidden_field :change_approval, value: 2 %>
+                  <%= attendance.hidden_field :change_check, value: "0" %>
+                  <%= attendance.hidden_field :calendar_day, value: day.worked_on.to_date %>
+              </td>
             </tr>
           <% end %>
         <% end %>

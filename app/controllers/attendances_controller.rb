@@ -41,36 +41,31 @@ class AttendancesController < ApplicationController
     end
     redirect_to @user
   end
-  
-  # def before_last_save(time)
-  #   attendance
-  #   Attendance.time_was
-  # end
-    
-    
 
   def edit_one_month
     @superiors = superior_without_me
   end
   
   def update_one_month
+    
     ActiveRecord::Base.transaction do
       if attendances_invalid?
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
-          if item[:change_superior_id].present?
-              attendance.update_attributes!(item)
-              attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
+          # debugger
+          if item[:change_superior_id].present? && item[:note].present? && item['changed_started_at'] != "" && item['changed_finished_at'] != ""
+            attendance.update_attributes!(item)
+            attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
           end
         end
-          flash[:success] = "勤怠変更を申請しました。"
-          redirect_to user_url(date: params[:date])
+        flash[:success] = "勤怠情報を更新しました。"
+        redirect_to user_url(date: params[:date])
       else
-          flash[:danger] = "#{INVALID_MSG}#{@msg}"
-          redirect_to attendances_edit_one_month_user_url(date: params[:date])
+        flash[:danger] = "#{INVALID_MSG}#{@msg}"
+        redirect_to attendances_edit_one_month_user_url(date: params[:date])
       end
     end
-  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
+  rescue ActiveRecord::RecordInvalid
     flash[:danger] = "#{INVALID_MSG}#{@msg}"
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end

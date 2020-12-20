@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     
     def update
       @user.update_attributes(user_params)
-      flash[:success] = "#{@user.name}のデータを更新しました。（更新順に並び変わります）"
+      flash[:success] = "#{@user.name}のデータを更新しました。）"
       redirect_to users_url
     end
     
@@ -109,18 +109,5 @@ class UsersController < ApplicationController
      def user_info_params
       params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_time, :designated_work_start_time, :designated_work_end_time)
      end
-     
-      # システム管理権限所有かどうか判定します。
-    # def superior_user
-    #   redirect_to root_url unless current_user.superior?
-    # end
-     
-    # def superior_or_correct
-    #   unless current_user?(@user) || current_user.superior?
-    #   flash[:danger] = "権限がありません。"
-    #   redirect_to root_url
-    #   end
-    # end
-    
  
 end
