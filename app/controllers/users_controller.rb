@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     
     def update
       @user.update_attributes(user_params)
-      flash[:success] = "#{@user.name}のデータを更新。"
+      flash[:success] = "#{@user.name}のデータを更新しました。"
       redirect_to users_url
     end
     
