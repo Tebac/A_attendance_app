@@ -9,7 +9,7 @@
       </td>
       <td>指定勤務開始時間：<%= @user.designated_work_start_time.strftime("%R") %><br>
           指定勤務終了時間：<%= @user.designated_work_end_time.strftime("%R") %></td>
-      <td>基本時間：<%= format_basic_info(@user.basic_time) %></td>
+      <td>基本時間：<%= format_basic_info(@user.basic_work_time) %></td>
       <td>初日：<%= l(@first_day, format: :short) %></td>
     </tr>
 
@@ -119,7 +119,7 @@
           <td><%= l(round_f(day.finished_at), format: :timeM) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? && %>
-              <%= str_times = working_times_show(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes), day.next_day_of_change) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
@@ -138,7 +138,7 @@
               <td></td>
               <td></td>
             <% end %>
-            <% if day.note.present? || day.reason_change.present? %>
+            <% if day.note.present? || day.reason_change.present? || day.change_status.present? || day.overtime_status.present? %>
               <td>
                 <%= day.change_superior_name %><%= change_status_text(day.change_status) %>
                 <%= tag.br if day.change_status.present? && day.overtime_status.present? %>

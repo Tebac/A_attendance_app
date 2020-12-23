@@ -65,6 +65,7 @@ class ApplicationController < ActionController::Base
   # 管理アカウントはアクセス不可
   def admin_exclusion
     if current_user.admin?
+      # flash[:danger] = "管理者は、アクセス不可。"
       redirect_to users_url
     end
   end
@@ -72,7 +73,7 @@ class ApplicationController < ActionController::Base
   # 上長本人
   def superior_himself
     unless User.where(superior: true).where(id: current_user.id)
-      flash[:danger] = "アクセス不可。"
+      flash[:danger] = "ログインしている上長以外は、アクセス不可。"
       redirect_to root_url and return
     end
   end

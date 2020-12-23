@@ -7,10 +7,10 @@ CSV.generate do |csv|
     column_values = [
       l(day.worked_on, format: :short),
       $days_of_the_week[day.worked_on.wday],
-      (day.changed_started_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_started_at.present? && day.change_status != "申請中" && day.change_status != "否認"),
-      (day.changed_finished_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認"),
-      (format("%.2f", working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.next_day)) if
-      day.changed_started_at.present? && day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認")
+      (day.changed_started_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_started_at.present? && day.change_status != "申請中" && day.change_status != "否認" && day.change_status != "なし"),
+      (day.changed_finished_at.floor_to(15.minutes).strftime("%H:%M") if day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認" && day.change_status != "なし"),
+      (format("%.2f", working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.next_day_of_change)) if
+      day.changed_started_at.present? && day.changed_finished_at.present? && day.change_status != "申請中" && day.change_status != "否認" && day.change_status != "なし")
     ]
     csv << column_values
   end

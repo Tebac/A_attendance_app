@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   # before_action :admin_or_correct, only: %i(show)
   before_action :superior_user, only: %i(confirmation_show) 
   before_action :superior_himself, only: %i(confirmation_show) 
-  before_action :admin_exclusion, only: %i(show)
+  before_action :admin_exclusion, only: %i(show confirmation_show)
   # before_action :superior_or_correct, only: %i(show)
   before_action :set_one_month, only: %i(show confirmation_show)
   before_action :one_month_request, only: %i(confirmation_show)
@@ -102,12 +102,12 @@ class UsersController < ApplicationController
   private
     def user_params
       params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :superior, :admin, :password, :password_confirmation,
-                                    :basic_time, :designated_work_start_time, :designated_work_end_time)
+                                    :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
   
     
      def user_info_params
-      params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_time, :designated_work_start_time, :designated_work_end_time)
+      params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
      end
  
 end

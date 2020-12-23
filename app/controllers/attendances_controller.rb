@@ -8,7 +8,7 @@ class AttendancesController < ApplicationController
   before_action :correct_user, only: %i(update_one_month_request edit_overtime_request recive_overtime_request confirmation_overtime_request
                                         recive_change_attendance_request confirmation_change_attendance_request edit_log)
   before_action :admin_or_correct, only: %i(edit_one_month update_one_month)
-  before_action :admin_exclusion, only: %i(update edit_one_monthupdate_one_month update_one_month_request one_month_request confirmation_one_month_request
+  before_action :admin_exclusion, only: %i(update edit_one_month update_one_month update_one_month_request one_month_request confirmation_one_month_request
                                            edit_overtime_request recive_overtime_request confirmation_overtime_request
                                            recive_change_attendance_request confirmation_change_attendance_request edit_log)
   before_action :set_one_month, only: %i(edit_one_month edit_overtime_request recive_overtime_request confirmation_overtime_request
@@ -49,6 +49,7 @@ class AttendancesController < ApplicationController
   def update_one_month
     
     ActiveRecord::Base.transaction do
+  
       if attendances_invalid?
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
@@ -132,6 +133,14 @@ class AttendancesController < ApplicationController
             item[:change_approval] = 2
             item[:change_check] = "0"
             item[:approval_date] = nil
+          elsif item[:change_status] == "なし"
+            item[:change_approval] = 4
+            item[:change_check] = "0"
+            item[:approval_date] = nil
+            item[:changed_started_at] = nil
+            item[:changed_finished_at] = nil
+            item[:next_day_of_change] = nil
+            item[:note] = nil
           end
           attendance.update_attributes(item)
         end
@@ -207,11 +216,18 @@ class AttendancesController < ApplicationController
         if item[:overtime_status] == "否認"
           item[:overtime_approval] = 2
           item[:overtime_check] = "0"
-          attendance.update_attributes(item)
+        elsif item[:overtime_status] == "なし"
+            item[:overtime_approval] = 4
+            item[:overtime_check] = "0"
+            item[:end_instruction_time] = nil
+            item[:reason_change] = nil
+            item[:next_day] = nil
+            item[:overtime_hours] = nil
         end
+          attendance.update_attributes(item)
       end
     end
-    flash[:success] = "残業申請の決裁を実施しました。
+     flash[:success] = "残業申請の決裁を実施しました。
     （但し、「変更」チェックがない場合、更新されていません）"
     redirect_to @user
   rescue ActiveRecord::RecordInvalid
