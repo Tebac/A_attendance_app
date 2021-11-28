@@ -9,7 +9,8 @@
               <li><%= link_to "全従業員一覧", users_path %></li>
               <li><%= link_to "出勤中の社員一覧",employees_working_user_path(current_user) %></li>
               <li><%= link_to "拠点一覧", user_locations_path(current_user) %></li>
-              <li><%= link_to "基本情報の修正", edit_all_basic_info_user_path(current_user) %></li>
+              <!--<li><!%= link_to "基本情報の修正", edit_all_basic_info_user_path(current_user) %></li>-->
+              <li><%= link_to "基本情報の修正", edit_basic_time_info_user_path(current_user) %></li>
             <% end %>
             
             <li class="dropdown">

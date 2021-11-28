@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     collection { post :import }
     
     member do
+      get 'index_basic_time'
+      get 'edit_basic_time_info'
+      patch 'update_basic_time_info'
       get 'employees_working'
       get 'edit_basic_info'
       get 'edit_all_basic_info'

@@ -33,4 +33,8 @@ User.create!(name: "上長Ｂ",
               password_confirmation: password)
 end
 
+puts "サンプル利用者作成！"
+
 Location.create!(location_name: "本社",location_type: "出勤", location_number: "1")
+
+puts "本社拠点作成！"

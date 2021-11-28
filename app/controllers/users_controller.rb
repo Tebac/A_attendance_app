@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
   
-  before_action :set_user, only: %i(show edit update destroy confirmation_show)
-  before_action :logged_in_user, only: %i(index show edit update edit_basic_info import confirmation_show)
-  before_action :admin_user, only: %i(index employees_working locations edit_all_basic_info edit update destroy)
+  before_action :set_user, only: %i(show edit update destroy confirmation_show
+                                    edit_basic_time_info update_basic_time_info)
+  before_action :logged_in_user, only: %i(index show edit update edit_basic_info import confirmation_show index_basic_time)
+  before_action :admin_user, only: %i(index employees_working locations edit_all_basic_info edit update destroy 
+                                      edit_basic_time_info update_basic_time_info index_basic_time)
   before_action :correct_user, only: %i(show)
   # before_action :admin_or_correct, only: %i(show)
   before_action :superior_user, only: %i(confirmation_show) 
@@ -16,6 +18,10 @@ class UsersController < ApplicationController
     
 
     def index
+      @users = User.where('name LIKE ?', "%#{params[:name]}%").paginate(page: params[:page], per_page: 10)
+    end
+    
+    def index_basic_time
       @users = User.where('name LIKE ?', "%#{params[:name]}%").paginate(page: params[:page], per_page: 10)
     end
     
@@ -98,16 +104,36 @@ class UsersController < ApplicationController
     def edit_all_basic_info
     end
     
+    def edit_basic_time_info
+    end
+    
+    def update_basic_time_info
+      ActiveRecord::Base.transaction do
+        @users = User.all
+        @users.each do |user|
+         user.update_attributes(basic_time_info_params)
+          flash[:success] = "すべてのユーザーの勤務時間情報を更新しました。"
+        end
+          redirect_to index_basic_time_user_url
+      end
+      
+    rescue ActiveRecord::RecordInvalid
+          render 'edit_basic_time_info'
+    end
+    
     
   private
     def user_params
       params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :superior, :admin, :password, :password_confirmation,
                                     :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
-  
     
-     def user_info_params
+    def user_info_params
       params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
-     end
+    end
+     
+    def basic_time_info_params
+      params.require(:user).permit(:basic_time, :work_time)
+    end
  
 end
