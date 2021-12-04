@@ -34,7 +34,7 @@
       <tr>
         <td>
           <% if current_user.admin? %>
-            <%= link_to user.name, user %>
+            <%= user.name %>
           <% else %>
             <%= user.name %>
           <% end %>
