@@ -1,11 +1,10 @@
-<% provide(:title, '基本情報の更新') %>
+<% provide(:title, '基本/指定勤務時間情報の修正') %>
 <% provide(:button_text, '編集') %>
 <h1>基本情報の更新</h1>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(model: @user, url: update_basic_time_info_user_path(@user),local: true, method: :patch) do |f| %>
-    <!--<!%= form_with(model: @user, url: update_basic_info_user_path(@user), local: true, method: :patch) do |f| %>-->
       <%= render 'shared/error_messages', object: @user %>
           
           <%= f.label :基本勤務時間 %>
